@@ -127,6 +127,8 @@ On an existing Skill, click **"+ Add Task"** and describe your needs:
 
 Click **"Analyze"**, LLM auto-parses to structured config. Edit if needed, then **"Confirm & Save"**.
 
+![Task Confirm](docs/screenshots/task-confirm.png)
+
 ---
 
 ## Trigger Modes

@@ -167,6 +167,8 @@ Skill 详情页点击"+ Add Task"打开创建向导：
 **第二步：审核并保存**
 LLM 返回解析结果，可手动修改：任务名称、触发类型、触发配置、执行指令。点击"Confirm & Save"保存。任务 ID 自动递增（TASK-001, TASK-002, ...）。
 
+![Task Confirm](docs/screenshots/task-confirm.png)
+
 ---
 
 ## 触发方式
