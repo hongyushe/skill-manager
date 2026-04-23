@@ -1,20 +1,17 @@
 # Skill-Manager — AI 的无人值班室
 
-让 AI 在你下班后继续干活：定时执行任务、调用工具、推送结果。
+Skill-Manager 是一个本地部署的 AI 自动化平台。你排好班（cron / webhook），配好工具箱（bash / python / web search / MCP），定好交班方式（推送通知）。然后你下班，它 7x24 值守。
 
-你排好班（cron/webhook），配好工具箱（python/web search/MCP），定好交班方式（Lobster 推送）。然后你下班，它 7x24 值守。
+对话式 AI 有两个致命缺陷：
+
+1. **要人盯着** — 你不发消息它就不动，不能自己醒来干活。关掉浏览器就停了
+2. **上下文污染** — 你让它查了新闻，再让它写代码，两次任务的上下文会串
+
+Skill-Manager 从架构层面解决这两个问题——每个任务独立上下文窗口，互不干扰；四种触发模式（Cron / Webhook / Manual / Chain，最深 5 层链式串联）；自然语言一句话建任务，LLM 自动解析为结构化配置。
+
+大量工作不需要深度思考，只需要专注执行。Kahneman 在《思考，快与慢》中将认知分为 System 1（自动、快速、低耗能）和 System 2（深思熟虑、慢、高耗能）。日常工作中绝大多数任务是 System 1 —— 搜新闻、整理数据、推送报告 —— 它们不需要推理，需要的是准时和专注。所以 Skill-Manager 的设计是：Skill 直接执行确定性的任务，只在真正需要深度思考时才动用 Agent 推理能力。
 
 ![Dashboard](docs/screenshots/dashboard-full.png)
-
-## 为什么需要它？
-
-对话式 AI（ChatGPT、Claude）有三个致命问题：
-
-1. **要人盯着** — 你不发消息它就不动，不能自己醒来干活
-2. **上下文污染** — 你让它查了新闻，再让它写代码，它会串
-3. **不能定时** — 没有 cron、没有 webhook，一切都是手动的
-
-Skill-Manager 解决这三个问题：每个任务独立 context、支持 cron/webhook 触发、结果自动推送。
 
 ## 核心能力
 
@@ -54,7 +51,7 @@ Skill-Manager 解决这三个问题：每个任务独立 context、支持 cron/w
 
 ```bash
 # 1. 克隆项目
-git clone https://github.com/your-username/skill-manager.git
+git clone https://github.com/hongyushe/skill-manager.git
 cd skill-manager
 
 # 2. 安装依赖
@@ -65,7 +62,7 @@ cp skill-manager.example.json skill-manager.json
 # 编辑 skill-manager.json，填入你的 API key 和 model
 
 # 4. 启动
-npm run dev
+./start.sh
 # 打开 http://localhost:10001
 ```
 
@@ -79,6 +76,11 @@ npm run dev
 | IM 消息日报 | 群消息导出 | 关键信息摘要 |
 | 竞品动态监控 | 定时检查官网/社媒 | 变化对比报告 |
 | 系统健康检查 | 定时执行检查脚本 | 异常告警 |
+
+## 文档
+
+- [白皮书](docs/whitepaper.md) — 项目定位、设计哲学、与 OpenClaw / Hermes Agent 对比
+- [使用指南](docs/guide.html) — 完整图文教程（含截图）
 
 ## 技术栈
 
