@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Manager - Usage Guide</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f11; color: #e0e0e0; line-height: 1.7; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; position: relative; }
+  h1 { font-size: 2em; margin-bottom: 8px; color: #fff; }
+  h2 { font-size: 1.4em; margin: 40px 0 16px; color: #8bb9ff; border-bottom: 1px solid #2a2a3a; padding-bottom: 8px; }
+  h3 { font-size: 1.15em; margin: 24px 0 12px; color: #c0d0ff; }
+  h4 { font-size: 1em; margin: 18px 0 8px; color: #a0b8df; }
+  p { margin-bottom: 14px; color: #b0b0b0; }
+  .subtitle { color: #888; font-size: 0.95em; margin-bottom: 32px; }
+  .screenshot { margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid #2a2a3a; background: #1a1a2a; }
+  .screenshot img { width: 100%; display: block; }
+  .screenshot .caption { padding: 10px 16px; font-size: 0.85em; color: #888; background: #151520; }
+  code { background: #1e1e2e; padding: 2px 7px; border-radius: 4px; font-size: 0.9em; color: #7ec8e3; }
+  pre { background: #111118; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; margin: 14px 0; overflow-x: auto; font-size: 0.88em; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: #c0c0c0; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
+  .tag-blue { background: #1a2a4a; color: #6eaaef; }
+  .tag-green { background: #1a3a2a; color: #6eefaa; }
+  .tag-orange { background: #3a2a1a; color: #efaa6e; }
+  .tag-purple { background: #2a1a3a; color: #aa6eef; }
+  ul { margin: 10px 0 16px 24px; }
+  li { margin-bottom: 6px; color: #b0b0b0; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .feature-card { background: #151520; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; }
+  .feature-card h4 { color: #8bb9ff; margin-bottom: 6px; font-size: 0.9em; }
+  .feature-card p { font-size: 0.82em; margin: 0; }
+  .step { display: flex; gap: 16px; margin: 16px 0; align-items: flex-start; }
+  .step-num { min-width: 32px; height: 32px; background: #1a2a4a; color: #6eaaef; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em; }
+  .step-content { flex: 1; }
+  .step-content strong { color: #ddd; }
+  .note { background: #1a1a0a; border-left: 3px solid #efaa6e; padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 0.9em; }
+  .toc { background: #151520; border: 1px solid #2a2a3a; border-radius: 8px; padding: 20px 28px; margin: 20px 0; }
+  .toc a { color: #6eaaef; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc ul { list-style: none; margin: 8px 0 0 0; padding: 0; }
+  .toc li { margin: 6px 0; padding-left: 16px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th { text-align: left; padding: 8px; color: #8bb9ff; border-bottom: 1px solid #2a2a3a; }
+  td { padding: 8px; border-bottom: 1px solid #1a1a2a; color: #b0b0b0; }
+  .section-divider { border: none; border-top: 1px solid #2a2a3a; margin: 40px 0; }
+  .lang-switch { position: absolute; top: 40px; right: 20px; background: #1a2a4a; color: #6eaaef; border: 1px solid #2a2a3a; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-size: 0.85em; text-decoration: none; }
+  .lang-switch:hover { background: #1a3a5a; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<a href="guide.html" class="lang-switch">中文</a>
+
+<h1>Skill Manager</h1>
+<p class="subtitle">AI Skill Automation Platform — Manage and Schedule Your Claude Code Skills</p>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#install">Installation & Startup</a></li>
+    <li><a href="#config">Configuration</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#skill-detail">Skill Detail Page</a></li>
+    <li><a href="#nl-task">Natural Language Task Creation</a></li>
+    <li><a href="#triggers">Trigger Modes</a></li>
+    <li><a href="#tools">Tool System & MCP</a></li>
+    <li><a href="#custom">Custom Skill Configuration</a></li>
+    <li><a href="#api">API Reference</a></li>
+    <li><a href="#architecture">Technical Architecture</a></li>
+  </ul>
+</div>
+
+<h2 id="overview">Overview</h2>
+
+<p>Skill Manager is a Next.js full-stack application for managing Claude Code Skills in the <code>~/.claude/skills/</code> directory. It provides a web interface to visualize Skill structures, manage scheduled tasks, trigger execution manually, and drive LLM through OpenAI-compatible APIs to complete automated workflows.</p>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Skill Visualization</h4>
+    <p>Auto-parse SKILL.md, hash-tracked summary sync</p>
+  </div>
+  <div class="feature-card">
+    <h4>Multiple Triggers</h4>
+    <p>Cron, Webhook, Manual, Chain triggers</p>
+  </div>
+  <div class="feature-card">
+    <h4>NL Task Config</h4>
+    <p>Natural language → LLM auto-parses to structured config</p>
+  </div>
+  <div class="feature-card">
+    <h4>MCP Integration</h4>
+    <p>Generic MCP client, connect to any MCP service</p>
+  </div>
+  <div class="feature-card">
+    <h4>Execution Tracking</h4>
+    <p>Full history, token usage, collapsible process view</p>
+  </div>
+  <div class="feature-card">
+    <h4>Lobster Notifications</h4>
+    <p>Auto-push results to WeChat, DingTalk, Slack, etc.</p>
+  </div>
+</div>
+
+<h2 id="install">Installation & Startup</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-content"><strong>Install Dependencies</strong>
+<pre><code>cd skill-manager
+npm install</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-content"><strong>Start Development Server</strong>
+<pre><code>npm run dev</code></pre>
+<p>Visit <code>http://localhost:10001</code>.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-content"><strong>(Optional) Python Virtual Environment</strong>
+<pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -r scripts/requirements.txt</code></pre>
+  </div>
+</div>
+
+<h2 id="config">Configuration</h2>
+
+<p>Open <code>http://localhost:10001/settings</code> or edit <code>skill-manager.json</code> in the project root:</p>
+
+<div class="screenshot">
+  <img src="screenshots/settings.png" alt="Settings Page">
+  <div class="caption">Fig: Settings Page</div>
+</div>
+
+<h3>LLM Configuration</h3>
+<table>
+  <tr><th>Setting</th><th>Description</th></tr>
+  <tr><td><code>base_url</code></td><td>OpenAI-compatible API base URL (Z.AI, OpenRouter, etc.)</td></tr>
+  <tr><td><code>api_key</code></td><td>LLM API Key (auto-masked on GET, shows first 4 + last 4 chars)</td></tr>
+  <tr><td><code>model</code></td><td>Model name (e.g. <code>glm-4-flash</code>, <code>gpt-4o</code>)</td></tr>
+  <tr><td><code>skills_dir</code></td><td>Skill directory path (default <code>~/.claude/skills</code>, overridable via <code>SKILLS_DIR</code> env)</td></tr>
+</table>
+
+<h3>Z.AI Web Search</h3>
+<table>
+  <tr><th>Setting</th><th>Description</th></tr>
+  <tr><td><code>zai_api_key</code></td><td>Z.AI API Key for the MCP Web Search tool</td></tr>
+</table>
+
+<h3>Lobster CLI Notifications (Optional)</h3>
+<table>
+  <tr><th>Setting</th><th>Description</th></tr>
+  <tr><td><code>lobster_enabled</code></td><td>Notification toggle (default <code>false</code>)</td></tr>
+  <tr><td><code>lobster_path</code></td><td>Path to Lobster CLI binary</td></tr>
+  <tr><td><code>lobster_pipeline</code></td><td>Pipeline template, supports <code>{{result}}</code> placeholder</td></tr>
+</table>
+
+<p>Notifications are triggered automatically after each successful Skill execution (async, non-blocking), used to push results to WeChat, DingTalk, Slack, etc.</p>
+
+<h4>Security</h4>
+<ul>
+  <li>API Keys are auto-masked on the Settings page (first 4 + <code>...</code> + last 4 chars)</li>
+  <li>Placeholder detection on save preserves original values</li>
+</ul>
+
+<h4>Environment Variables</h4>
+<table>
+  <tr><th>Variable</th><th>Description</th><th>Default</th></tr>
+  <tr><td><code>SKILLS_DIR</code></td><td>Skill directory path</td><td><code>~/.claude/skills</code></td></tr>
+  <tr><td><code>PORT</code></td><td>Server port</td><td><code>10001</code></td></tr>
+  <tr><td><code>OPENAI_BASE_URL</code></td><td>LLM API URL (overridden by config)</td><td>—</td></tr>
+  <tr><td><code>OPENAI_API_KEY</code></td><td>LLM API Key (overridden by config)</td><td>—</td></tr>
+  <tr><td><code>OPENAI_MODEL</code></td><td>Model name (overridden by config)</td><td><code>gpt-4o</code></td></tr>
+</table>
+
+<h2 id="dashboard">Dashboard</h2>
+
+<div class="screenshot">
+  <img src="screenshots/dashboard.png" alt="Dashboard">
+  <div class="caption">Fig: Dashboard — Active Tasks and Skill List</div>
+</div>
+
+<ul>
+  <li><strong>Active Tasks</strong> — Aggregates all <code>active</code> tasks across Skills, shows trigger type icons (<span class="tag tag-blue">Blue=Cron</span> <span class="tag tag-green">Green=Webhook</span> <span class="tag">White=Manual</span>), task names, parent Skills</li>
+  <li><strong>Skills</strong> — Card grid for Skills with tasks, showing name, task count, and summary</li>
+  <li><strong>Unconfigured</strong> — Lists Skills without configured tasks</li>
+</ul>
+
+<h3>Auto-Sync</h3>
+<p>On load, Dashboard checks all SKILL.md files via <strong>SHA-256 hash</strong>. If content has changed or new Skills are found, summaries are auto-regenerated. Hash-based comparison avoids unnecessary LLM calls.</p>
+
+<h2 id="skill-detail">Skill Detail Page</h2>
+
+<div class="screenshot">
+  <img src="screenshots/skill-detail.png" alt="Skill Detail Page">
+  <div class="caption">Fig: news-monitor Skill Detail — Summary, Tasks, Execution Result, History</div>
+</div>
+
+<h3>Summary</h3>
+<p>Three states:</p>
+<ul>
+  <li><strong>No summary</strong> → "Generate Summary" button</li>
+  <li><strong>Has summary</strong> → Read-only display + "Edit" button</li>
+  <li><strong>Editing</strong> → Text box + Save/Cancel buttons</li>
+</ul>
+<p>Summary is generated by LLM from SKILL.md content, 200-500 chars plain text.</p>
+
+<h3>Tasks</h3>
+<p>Each task card contains: trigger type icon, name, schedule expression, instruction preview, <strong>▶ Run</strong> and delete buttons.</p>
+
+<h3>Latest Result</h3>
+<ul>
+  <li>Metadata: timestamp, status, task name, duration</li>
+  <li>Collapsible process: <code>▸ Process (N reasoning turns · M tool calls)</code>, expand to see each tool call detail</li>
+  <li>Final output</li>
+</ul>
+<p class="note">Process data is displayed temporarily after execution and disappears on page refresh. It is not persisted to history.json.</p>
+
+<h3>History Timeline</h3>
+<ul>
+  <li>Shows last 10 entries by default, expandable</li>
+  <li>Each record: time, task name/trigger source, status (color-coded), output summary (truncated 80 chars)</li>
+  <li>Full edit logs (before/after for each custom.md change) stored in history.json</li>
+</ul>
+
+<h2 id="nl-task">Natural Language Task Creation</h2>
+
+<p>Click <strong>"+ Add Task"</strong> on a Skill detail page to open the creation wizard:</p>
+
+<h4>Step 1: Enter Description</h4>
+<p>Describe the task you want in English (or Chinese):</p>
+<pre><code>Search Trump's latest statements every morning at 9am, summarize in Chinese</code></pre>
+<p>Click <strong>"Analyze"</strong>, LLM auto-parses to structured config.</p>
+
+<h4>Step 2: Review and Save</h4>
+<p>LLM returns the parsed result, editable: task name, trigger type, trigger config, execution instructions. Click <strong>"Confirm & Save"</strong>. Task IDs auto-increment (TASK-001, TASK-002, ...).</p>
+
+<p class="note">This feature requires an LLM API Key configured in Settings.</p>
+
+<h2 id="triggers">Trigger Modes</h2>
+
+<table>
+  <tr><th>Type</th><th>Description</th><th>Configuration</th></tr>
+  <tr><td><span class="tag tag-blue">cron</span></td><td>Scheduled execution, standard cron expression</td><td><code>trigger_config: "0 9 * * *"</code></td></tr>
+  <tr><td><span class="tag tag-green">webhook</span></td><td>HTTP POST callback, external system trigger</td><td>Configure endpoint, e.g. <code>/api/hooks/my-hook</code></td></tr>
+  <tr><td><span class="tag tag-orange">manual</span></td><td>Click to run from Web UI</td><td>Default mode, no config needed</td></tr>
+  <tr><td><span class="tag tag-purple">chain</span></td><td>Chain trigger, auto-fires next Skill after completion</td><td>Configure <code>chainTarget</code></td></tr>
+</table>
+
+<h3>Cron Trigger (Auto-Register)</h3>
+<p>Adding/updating a Cron task <strong>auto-registers to system crontab</strong>, no manual config needed.</p>
+<pre><code>0 9 * * * curl -s -X POST http://localhost:10001/api/execute/news-monitor?trigger=cron&task_id=TASK-001 # skill-manager:news-monitor:TASK-001</code></pre>
+<ul>
+  <li>Uses tagged comments <code># skill-manager:&lt;name&gt;:&lt;taskId&gt;</code> to manage entries</li>
+  <li>Deleting a task auto-cleans the corresponding crontab entry</li>
+</ul>
+
+<h3>Webhook Trigger</h3>
+<pre><code>curl -X POST http://localhost:10001/api/hooks/my-hook \
+  -H "Content-Type: application/json" \
+  -d '{"event": "trigger", "data": "extra context"}'</code></pre>
+<p>System scans all Skills for matching webhook triggers, appends payload to prompt, and executes.</p>
+
+<h3>Chain Trigger</h3>
+<p>After current Skill completes, auto-fires the next Skill.</p>
+<pre><code>## Triggers
+### chain-1
+- type: chain
+- chainTarget: next-skill-name
+- status: active</code></pre>
+<ul>
+  <li>Max <strong>5 levels</strong> chain depth (prevents infinite loops)</li>
+  <li>Async fire-and-forget, doesn't block current Skill</li>
+  <li>One Skill failure doesn't affect others in the chain</li>
+</ul>
+
+<h2 id="tools">Tool System & MCP</h2>
+
+<h3>Generic MCP Client</h3>
+<p>Built-in <code>@modelcontextprotocol/sdk</code>, connects to any Streamable HTTP MCP server:</p>
+<pre><code>import { callMcpTool } from "@/lib/mcp-client";
+
+const result = await callMcpTool(
+  "https://api.z.ai/api/mcp/web_search_prime/mcp",
+  "your-api-key",
+  "web_search_prime",
+  { search_query: "search query" }
+);</code></pre>
+<p>Each call creates a new connection (avoids session expiry), auto-handles init handshake and session cleanup.</p>
+
+<h3>Declare Tools in Skill</h3>
+<pre><code>## Tools
+- web_search</code></pre>
+
+<table>
+  <tr><th>Tool</th><th>Description</th><th>Params</th><th>Dependency</th></tr>
+  <tr><td><code>web_search</code></td><td>Web search via Z.AI MCP</td><td><code>query</code>: search keyword</td><td><code>zai_api_key</code></td></tr>
+</table>
+
+<p>Tools are auto-invoked by the LLM Agent during execution as needed, no manual triggering required.</p>
+
+<h2 id="custom">Custom Skill Configuration</h2>
+
+<p>Config stored in <code>~/.claude/skills/skill-manager/&lt;name&gt;/custom.md</code>.</p>
+
+<h3>New Format (Recommended)</h3>
+<pre><code>## Tools
+- web_search
+
+## Tasks
+### TASK-001
+- name: Task Name
+- trigger_type: cron
+- trigger_config: 0 9 * * *
+- instruction: |
+    Specific task instructions...
+- status: active</code></pre>
+
+<h3>Legacy Format (Backward Compatible)</h3>
+<p>System also supports the old format, can coexist in the same custom.md:</p>
+<pre><code>## Triggers
+### TRG-001
+- intent: trigger intent
+- type: cron
+- cron: 0 9 * * *
+- status: active
+
+## Execution Details
+### EXEC-001
+- intent: execution intent
+- prompt: |
+    Additional execution instructions...</code></pre>
+
+<h3>Data Directory Structure</h3>
+<pre><code>~/.claude/skills/
+  news-monitor/
+    SKILL.md                              # Skill definition (Claude Code reads this)
+  skill-manager/
+    news-monitor/
+      custom.md                           # Custom config (tasks, triggers, tools)
+      summary.md                          # LLM auto-generated summary
+      history.json                        # Execution history + edit logs
+      .skill-hash                         # SHA-256 hash of SKILL.md (change detection)</code></pre>
+<p class="note"><code>skill-manager/</code> subdirectory ensures data files don't interfere with Claude Code reading SKILL.md.</p>
+
+<h2 id="api">API Reference</h2>
+
+<h3>Skill Operations</h3>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/skills</code></td><td>List all Skill names</td></tr>
+  <tr><td>GET</td><td><code>/api/skills/[name]</code></td><td>Get Skill full details</td></tr>
+  <tr><td>PUT</td><td><code>/api/skills/[name]</code></td><td>Update Skill (add/update tasks, summary)</td></tr>
+  <tr><td>DELETE</td><td><code>/api/skills/[name]</code></td><td>Delete task or trigger</td></tr>
+</table>
+
+<h3>Execution</h3>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+  <tr><td>POST</td><td><code>/api/execute/[name]?trigger=manual&task_id=TASK-001</code></td><td>Execute a specific task</td></tr>
+  <tr><td>POST</td><td><code>/api/execute/[name]?trigger=manual</code></td><td>Execute entire Skill</td></tr>
+  <tr><td>POST</td><td><code>/api/hooks/[hookId]</code></td><td>Webhook trigger</td></tr>
+</table>
+
+<h3>Other</h3>
+<table>
+  <tr><th>Method</th><th>Path</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/api/settings</code></td><td>Get config (API Key masked)</td></tr>
+  <tr><td>PUT</td><td><code>/api/settings</code></td><td>Update config</td></tr>
+  <tr><td>GET</td><td><code>/api/summary</code></td><td>Batch sync all Skill summaries</td></tr>
+  <tr><td>POST</td><td><code>/api/summary</code></td><td>Generate single Skill summary</td></tr>
+  <tr><td>POST</td><td><code>/api/interpret</code></td><td>Natural language to task config</td></tr>
+  <tr><td>POST</td><td><code>/api/cron</code></td><td>Manage crontab (register/remove/list)</td></tr>
+</table>
+
+<h2 id="architecture">Technical Architecture</h2>
+
+<ul>
+  <li><span class="tag tag-blue">Frontend</span> Next.js App Router + React + Tailwind CSS</li>
+  <li><span class="tag tag-green">Execution Engine</span> @mariozechner/pi-coding-agent (multi-turn Agent Loop + Tool Calling)</li>
+  <li><span class="tag tag-orange">MCP</span> @modelcontextprotocol/sdk (generic MCP client)</li>
+  <li><span class="tag tag-purple">Scheduling</span> System crontab (managed via tagged comments)</li>
+</ul>
+
+<h3>Execution Flow</h3>
+<pre><code>User/Timer/Webhook → API Route (/api/execute/[name])
+  → Read Skill config (custom.md)
+  → Parse tool declarations (## Tools) → resolveTools() → ToolDefinition[]
+  → assemblePrompt() builds full prompt
+  → pi-coding-agent Agent Loop
+      → LLM decision → tool call → get result → continue reasoning (auto multi-turn)
+  → Log execution (history.json)
+  → Lobster notification (if enabled)
+  → Check Chain trigger → recursively execute next Skill
+  → Return result + process data (process steps, reasoning turns)</code></pre>
+
+<h3>Engine Details</h3>
+<table>
+  <tr><th>Parameter</th><th>Value</th></tr>
+  <tr><td>Provider type</td><td><code>openai-completions</code> (OpenAI-compatible API)</td></tr>
+  <tr><td>Context window</td><td>128K tokens</td></tr>
+  <tr><td>Max output</td><td>4096 tokens</td></tr>
+  <tr><td>Token estimation</td><td>Character-based (<code>ceil(text.length / 4)</code>)</td></tr>
+  <tr><td>System prompt</td><td>Output final result only, no reasoning process</td></tr>
+</table>
+
+<p style="margin-top: 40px; color: #555; font-size: 0.85em; text-align: center;">
+  Skill Manager v1.0 — 2026-04-14
+</p>
+
+</div>
+</body>
+</html>
