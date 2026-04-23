@@ -6,9 +6,9 @@ Skill-Manager 是一个本地部署的 AI 自动化平台。你排好班（cron 
 
 大量工作不需要深度思考，只需要专注执行。Kahneman 在《思考，快与慢》中将认知分为 System 1（自动、快速、低耗能）和 System 2（深思熟虑、慢、高耗能）。日常工作中绝大多数任务是 System 1 —— 搜新闻、整理数据、推送报告 —— 它们不需要推理，需要的是准时和专注。所以 Skill-Manager 的设计是：Skill 直接执行确定性的任务，只在真正需要深度思考时才动用 Agent 推理能力。
 
-![Dashboard](docs/screenshots/dashboard-full.png)
-
 **[English Version](README.md)** | **[白皮书 / Whitepaper](docs/whitepaper.md)**
+
+![Dashboard](docs/screenshots/dashboard-full.png)
 
 ---
 

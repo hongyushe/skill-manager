@@ -6,9 +6,9 @@ The core problem of conversational AI is **context pollution** — different tas
 
 Most work doesn't require deep thinking — it requires focused execution. In *Thinking, Fast and Slow*, Kahneman distinguishes System 1 (automatic, fast, low-effort) from System 2 (deliberate, slow, high-effort). The vast majority of daily tasks — search news, organize data, push reports — are System 1. They don't need reasoning; they need punctuality and focus. So Skill-Manager's design: Skills execute deterministic tasks directly; Agent reasoning is engaged only when genuine deep thinking is required.
 
-![Dashboard](docs/screenshots/dashboard-full.png)
-
 **[中文版](README-zh.md)** | **[Whitepaper](docs/whitepaper.md)** | **[Usage Guide](docs/guide-en.html)**
+
+![Dashboard](docs/screenshots/dashboard-full.png)
 
 ---
 
