@@ -1,0 +1,8 @@
+node_modules
+.next
+docs
+screenshots-blog.mjs
+screenshots.mjs
+*.tsbuildinfo
+*.env.local
+skill-manager.json

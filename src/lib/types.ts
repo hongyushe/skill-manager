@@ -40,6 +40,17 @@ export interface ExecDetailEntry {
 export interface CustomData {
   triggers: TriggerEntry[];
   execDetails: ExecDetailEntry[];
+  tasks: TaskEntry[];
+  tools: string[];
+}
+
+export interface TaskEntry {
+  id: string;
+  name: string;
+  triggerType: "cron" | "webhook" | "manual";
+  triggerConfig: string;
+  instruction: string;
+  status: "active" | "paused";
 }
 
 export interface ExecutionLog {
@@ -52,6 +63,8 @@ export interface ExecutionLog {
   output: string;
   duration_ms: number;
   token_usage: { prompt: number; completion: number };
+  task_id?: string;
+  task_name?: string;
 }
 
 export interface EditLog {
@@ -68,6 +81,11 @@ export interface HistoryData {
   edit_logs: EditLog[];
 }
 
+export interface SkillVisibilityEntry {
+  visible: boolean;
+  automation_enabled: boolean;
+}
+
 export interface ApiSettings {
   base_url: string;
   api_key: string;
@@ -81,4 +99,12 @@ export interface SkillDetail {
   history: HistoryData;
   hasCustom: boolean;
   hasHistory: boolean;
+  summary: string | null;
+}
+
+export interface SkillOverview {
+  name: string;
+  summary: string | null;
+  tasks: TaskEntry[];
+  lastExecution: ExecutionLog | null;
 }

@@ -1,0 +1,13 @@
+{
+  "base_url": "",
+  "api_key": "",
+  "model": "gpt-4o",
+  "skills_dir": "",
+  "zai_api_key": "",
+  "lobster_enabled": false,
+  "lobster_path": "lobster",
+  "lobster_pipeline": "",
+  "mcp_servers": [],
+  "custom_tools": [],
+  "skill_visibility": {}
+}

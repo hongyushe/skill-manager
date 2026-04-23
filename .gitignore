@@ -42,3 +42,14 @@ skill-manager.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python
+.venv/
+
+# docs - blog articles excluded from repo
+docs/blog/
+docs/screenshots.zip
+docs/归档.zip
+
+# runtime
+.skill-manager.pid

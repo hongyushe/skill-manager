@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Manager 使用指南</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f0f11; color: #e0e0e0; line-height: 1.7; }
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+  h1 { font-size: 2em; margin-bottom: 8px; color: #fff; }
+  h2 { font-size: 1.4em; margin: 40px 0 16px; color: #8bb9ff; border-bottom: 1px solid #2a2a3a; padding-bottom: 8px; }
+  h3 { font-size: 1.15em; margin: 24px 0 12px; color: #c0d0ff; }
+  h4 { font-size: 1em; margin: 18px 0 8px; color: #a0b8df; }
+  p { margin-bottom: 14px; color: #b0b0b0; }
+  .subtitle { color: #888; font-size: 0.95em; margin-bottom: 32px; }
+  .screenshot { margin: 20px 0; border-radius: 10px; overflow: hidden; border: 1px solid #2a2a3a; background: #1a1a2a; }
+  .screenshot img { width: 100%; display: block; }
+  .screenshot .caption { padding: 10px 16px; font-size: 0.85em; color: #888; background: #151520; }
+  code { background: #1e1e2e; padding: 2px 7px; border-radius: 4px; font-size: 0.9em; color: #7ec8e3; }
+  pre { background: #111118; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; margin: 14px 0; overflow-x: auto; font-size: 0.88em; line-height: 1.6; }
+  pre code { background: none; padding: 0; color: #c0c0c0; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
+  .tag-blue { background: #1a2a4a; color: #6eaaef; }
+  .tag-green { background: #1a3a2a; color: #6eefaa; }
+  .tag-orange { background: #3a2a1a; color: #efaa6e; }
+  .tag-purple { background: #2a1a3a; color: #aa6eef; }
+  ul { margin: 10px 0 16px 24px; }
+  li { margin-bottom: 6px; color: #b0b0b0; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .feature-card { background: #151520; border: 1px solid #2a2a3a; border-radius: 8px; padding: 16px; }
+  .feature-card h4 { color: #8bb9ff; margin-bottom: 6px; font-size: 0.9em; }
+  .feature-card p { font-size: 0.82em; margin: 0; }
+  .step { display: flex; gap: 16px; margin: 16px 0; align-items: flex-start; }
+  .step-num { min-width: 32px; height: 32px; background: #1a2a4a; color: #6eaaef; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9em; }
+  .step-content { flex: 1; }
+  .step-content strong { color: #ddd; }
+  .note { background: #1a1a0a; border-left: 3px solid #efaa6e; padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 0.9em; }
+  .toc { background: #151520; border: 1px solid #2a2a3a; border-radius: 8px; padding: 20px 28px; margin: 20px 0; }
+  .toc a { color: #6eaaef; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc ul { list-style: none; margin: 8px 0 0 0; padding: 0; }
+  .toc li { margin: 6px 0; padding-left: 16px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th { text-align: left; padding: 8px; color: #8bb9ff; border-bottom: 1px solid #2a2a3a; }
+  td { padding: 8px; border-bottom: 1px solid #1a1a2a; color: #b0b0b0; }
+  .section-divider { border: none; border-top: 1px solid #2a2a3a; margin: 40px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Skill Manager</h1>
+<p class="subtitle">AI Skill 自动化执行平台 — 管理和定时运行你的 Claude Code Skills</p>
+
+<div class="toc">
+  <strong>目录</strong>
+  <ul>
+    <li><a href="#overview">项目概述</a></li>
+    <li><a href="#install">安装与启动</a></li>
+    <li><a href="#config">配置</a></li>
+    <li><a href="#dashboard">仪表盘</a></li>
+    <li><a href="#skill-detail">Skill 详情页</a></li>
+    <li><a href="#nl-task">自然语言创建任务</a></li>
+    <li><a href="#triggers">触发方式</a></li>
+    <li><a href="#tools">工具系统与 MCP</a></li>
+    <li><a href="#custom">自定义 Skill 配置</a></li>
+    <li><a href="#api">API 参考</a></li>
+    <li><a href="#architecture">技术架构</a></li>
+  </ul>
+</div>
+
+<h2 id="overview">项目概述</h2>
+
+<p>Skill Manager 是一个 Next.js 全栈应用，用于管理 <code>~/.claude/skills/</code> 目录下的 Claude Code Skills。提供 Web 界面来可视化 Skill 结构、管理定时任务、手动触发执行，并通过 OpenAI 兼容 API 驱动 LLM 完成自动化工作流。</p>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Skill 可视化</h4>
+    <p>自动解析 SKILL.md，哈希追踪自动同步摘要</p>
+  </div>
+  <div class="feature-card">
+    <h4>多种触发方式</h4>
+    <p>Cron、Webhook、手动、Chain 链式</p>
+  </div>
+  <div class="feature-card">
+    <h4>自然语言建任务</h4>
+    <p>中文描述 → LLM 自动解析为结构化配置</p>
+  </div>
+  <div class="feature-card">
+    <h4>MCP 工具集成</h4>
+    <p>通用 MCP 客户端，连接任意 MCP 服务</p>
+  </div>
+  <div class="feature-card">
+    <h4>执行追踪</h4>
+    <p>完整历史、Token 用量、可折叠过程展示</p>
+  </div>
+  <div class="feature-card">
+    <h4>Lobster 通知</h4>
+    <p>结果自动推送到微信、钉钉、Slack 等</p>
+  </div>
+</div>
+
+<h2 id="install">安装与启动</h2>
+
+<div class="step">
+  <div class="step-num">1</div>
+  <div class="step-content"><strong>安装依赖</strong>
+<pre><code>cd skill-manager
+npm install</code></pre>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">2</div>
+  <div class="step-content"><strong>启动开发服务器</strong>
+<pre><code>npm run dev</code></pre>
+<p>访问 <code>http://localhost:3000</code>。</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="step-num">3</div>
+  <div class="step-content"><strong>（可选）Python 虚拟环境</strong>
+<pre><code>python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt</code></pre>
+  </div>
+</div>
+
+<h2 id="config">配置</h2>
+
+<p>打开 <code>http://localhost:3000/settings</code> 或编辑项目根目录的 <code>skill-manager.json</code>：</p>
+
+<div class="screenshot">
+  <img src="screenshots/settings.png" alt="Settings 页面">
+  <div class="caption">图：Settings 页面</div>
+</div>
+
+<h3>LLM 配置</h3>
+<table>
+  <tr><th>配置项</th><th>说明</th></tr>
+  <tr><td><code>base_url</code></td><td>OpenAI 兼容 API 的 Base URL（Z.AI、OpenRouter 等）</td></tr>
+  <tr><td><code>api_key</code></td><td>LLM API Key（GET 时自动脱敏，显示前4位+...+后4位）</td></tr>
+  <tr><td><code>model</code></td><td>模型名称（如 <code>glm-4-flash</code>、<code>gpt-4o</code>）</td></tr>
+  <tr><td><code>skills_dir</code></td><td>Skill 目录路径（默认 <code>~/.claude/skills</code>，可通过环境变量 <code>SKILLS_DIR</code> 覆盖）</td></tr>
+</table>
+
+<h3>Z.AI Web Search</h3>
+<table>
+  <tr><th>配置项</th><th>说明</th></tr>
+  <tr><td><code>zai_api_key</code></td><td>Z.AI API Key，用于 MCP Web Search 工具</td></tr>
+</table>
+
+<h3>Lobster CLI 通知（可选）</h3>
+<table>
+  <tr><th>配置项</th><th>说明</th></tr>
+  <tr><td><code>lobster_enabled</code></td><td>通知开关（默认 <code>false</code>）</td></tr>
+  <tr><td><code>lobster_path</code></td><td>Lobster CLI 可执行文件路径</td></tr>
+  <tr><td><code>lobster_pipeline</code></td><td>Pipeline 模板，支持 <code>{{result}}</code> 占位符</td></tr>
+</table>
+
+<p>每次 Skill 执行成功后自动触发通知（异步，不阻塞执行），用于推送结果到微信、钉钉、Slack 等外部通道。</p>
+
+<h4>安全机制</h4>
+<ul>
+  <li>API Key 在 Settings 页面显示时自动脱敏（前4位 + <code>...</code> + 后4位）</li>
+  <li>保存时检测 <code>...</code> 占位符，自动保留原值不被覆盖</li>
+</ul>
+
+<h4>环境变量</h4>
+<table>
+  <tr><th>变量</th><th>说明</th><th>默认值</th></tr>
+  <tr><td><code>SKILLS_DIR</code></td><td>Skill 目录路径</td><td><code>~/.claude/skills</code></td></tr>
+  <tr><td><code>PORT</code></td><td>服务端口</td><td><code>3000</code></td></tr>
+  <tr><td><code>OPENAI_BASE_URL</code></td><td>LLM API URL（被 config 覆盖）</td><td>—</td></tr>
+  <tr><td><code>OPENAI_API_KEY</code></td><td>LLM API Key（被 config 覆盖）</td><td>—</td></tr>
+  <tr><td><code>OPENAI_MODEL</code></td><td>模型名称（被 config 覆盖）</td><td><code>gpt-4o</code></td></tr>
+</table>
+
+<h2 id="dashboard">仪表盘</h2>
+
+<div class="screenshot">
+  <img src="screenshots/dashboard.png" alt="Dashboard 仪表盘">
+  <div class="caption">图：Dashboard — Active Tasks 和 Skill 列表</div>
+</div>
+
+<ul>
+  <li><strong>Active Tasks</strong> — 汇总所有 Skill 中状态为 <code>active</code> 的任务，显示触发类型图标（<span class="tag tag-blue">蓝色=Cron</span> <span class="tag tag-green">绿色=Webhook</span> <span class="tag">白色=Manual</span>）、任务名称、所属 Skill</li>
+  <li><strong>Skills</strong> — 有任务的 Skill 卡片网格，显示名称、任务数量和摘要</li>
+  <li><strong>未配置任务</strong> — 列出没有配置任务的 Skill</li>
+</ul>
+
+<h3>自动同步</h3>
+<p>Dashboard 加载时自动检测所有 SKILL.md 的 <strong>SHA-256 哈希</strong>。如果 SKILL.md 内容发生变化，或发现新 Skill，自动重新生成摘要。基于哈希对比，避免不必要的 LLM 调用。</p>
+
+<h2 id="skill-detail">Skill 详情页</h2>
+
+<div class="screenshot">
+  <img src="screenshots/skill-detail.png" alt="Skill 详情页">
+  <div class="caption">图：news-monitor Skill 详情 — 摘要、任务、执行结果、历史</div>
+</div>
+
+<h3>摘要（Summary）</h3>
+<p>三种状态：</p>
+<ul>
+  <li><strong>无摘要</strong> → 显示"Generate Summary"按钮</li>
+  <li><strong>有摘要</strong> → 只读显示 + "Edit"按钮</li>
+  <li><strong>编辑中</strong> → 文本框 + Save/Cancel 按钮</li>
+</ul>
+<p>摘要由 LLM 基于 SKILL.md 内容生成，200-500 字纯文本描述。</p>
+
+<h3>任务（Tasks）</h3>
+<p>每个任务卡片包含：触发类型图标、名称、调度表达式、指令预览、<strong>▶ Run</strong> 和删除按钮。</p>
+
+<h3>最新结果（Latest Result）</h3>
+<ul>
+  <li>元信息：时间戳、状态、任务名称、耗时</li>
+  <li>可折叠过程行：<code>▸ 过程 (N轮推理 · M次工具调用)</code>，点击展开显示每次工具调用详情</li>
+  <li>最终输出结果</li>
+</ul>
+<p class="note">过程数据仅在执行后临时显示，刷新页面后消失，不持久化到 history.json。</p>
+
+<h3>执行历史（History Timeline）</h3>
+<ul>
+  <li>默认显示最近 10 条，可展开查看全部</li>
+  <li>每条记录：时间、任务名/触发来源、状态（颜色区分）、输出摘要</li>
+  <li>完整的编辑日志存储在 history.json（每次 custom.md 修改的 before/after）</li>
+</ul>
+
+<h2 id="nl-task">自然语言创建任务</h2>
+
+<p>Skill 详情页点击 <strong>"+ Add Task"</strong> 打开创建向导：</p>
+
+<h4>第一步：输入描述</h4>
+<p>用中文（或英文）描述你想要的任务，例如：</p>
+<pre><code>每天早上9点搜索特朗普最新言论，用中文汇总</code></pre>
+<p>点击 <strong>"Analyze"</strong>，LLM 自动解析为结构化配置。</p>
+
+<h4>第二步：审核并保存</h4>
+<p>LLM 返回解析结果，可手动修改：任务名称、触发类型、触发配置、执行指令。点击 <strong>"Confirm & Save"</strong> 保存。任务 ID 自动递增（TASK-001, TASK-002, ...）。</p>
+
+<p class="note">此功能需要在 Settings 中配置 LLM API Key。</p>
+
+<h2 id="triggers">触发方式</h2>
+
+<table>
+  <tr><th>类型</th><th>说明</th><th>配置方式</th></tr>
+  <tr><td><span class="tag tag-blue">cron</span></td><td>定时执行，标准 Cron 表达式</td><td><code>trigger_config: "0 9 * * *"</code></td></tr>
+  <tr><td><span class="tag tag-green">webhook</span></td><td>HTTP POST 回调，外部系统触发</td><td>配置 endpoint，如 <code>/api/hooks/my-hook</code></td></tr>
+  <tr><td><span class="tag tag-orange">manual</span></td><td>Web 界面手动点击</td><td>默认方式，无需配置</td></tr>
+  <tr><td><span class="tag tag-purple">chain</span></td><td>链式触发，执行完自动触发下一个 Skill</td><td>配置 <code>chainTarget</code></td></tr>
+</table>
+
+<h3>Cron 触发（自动注册）</h3>
+<p>添加/更新 Cron 类型的 Task 时，系统<strong>自动注册到系统 crontab</strong>，无需手动配置。</p>
+<pre><code>0 9 * * * curl -s -X POST http://localhost:3000/api/execute/news-monitor?trigger=cron&task_id=TASK-001 # skill-manager:news-monitor:TASK-001</code></pre>
+<ul>
+  <li>使用标记注释 <code># skill-manager:&lt;name&gt;:&lt;taskId&gt;</code> 管理条目</li>
+  <li>删除 Task 时自动清理对应的 crontab 条目</li>
+</ul>
+
+<h3>Webhook 触发</h3>
+<pre><code>curl -X POST http://localhost:3000/api/hooks/my-hook \
+  -H "Content-Type: application/json" \
+  -d '{"event": "trigger", "data": "额外上下文"}'</code></pre>
+<p>系统扫描所有 Skill 找到匹配的 webhook trigger，将 payload 附加到 Prompt 中执行。</p>
+
+<h3>Chain 链式触发</h3>
+<p>当前 Skill 执行完成后自动触发下一个 Skill。</p>
+<pre><code>## Triggers
+### chain-1
+- type: chain
+- chainTarget: next-skill-name
+- status: active</code></pre>
+<ul>
+  <li>最大 <strong>5 层</strong>链式嵌套深度（防止无限循环）</li>
+  <li>异步 fire-and-forget，不阻塞当前 Skill</li>
+  <li>链中某个 Skill 失败不影响其他 Skill</li>
+</ul>
+
+<h2 id="tools">工具系统与 MCP</h2>
+
+<h3>通用 MCP 客户端</h3>
+<p>内置 <code>@modelcontextprotocol/sdk</code>，连接任意 Streamable HTTP MCP 服务器：</p>
+<pre><code>import { callMcpTool } from "@/lib/mcp-client";
+
+const result = await callMcpTool(
+  "https://api.z.ai/api/mcp/web_search_prime/mcp",
+  "your-api-key",
+  "web_search_prime",
+  { search_query: "搜索内容" }
+);</code></pre>
+<p>每次调用创建新连接（避免会话过期），自动处理初始化握手和 session 清理。</p>
+
+<h3>在 Skill 中声明工具</h3>
+<pre><code>## Tools
+- web_search</code></pre>
+
+<table>
+  <tr><th>工具名</th><th>说明</th><th>参数</th><th>依赖</th></tr>
+  <tr><td><code>web_search</code></td><td>通过 Z.AI MCP 搜索 Web</td><td><code>query</code>: 搜索关键词</td><td><code>zai_api_key</code></td></tr>
+</table>
+
+<p>工具在执行时由 LLM Agent 自动判断何时调用，无需手动触发。</p>
+
+<h2 id="custom">自定义 Skill 配置</h2>
+
+<p>配置存储在 <code>~/.claude/skills/skill-manager/&lt;name&gt;/custom.md</code>。</p>
+
+<h3>新格式（推荐）</h3>
+<pre><code>## Tools
+- web_search
+
+## Tasks
+### TASK-001
+- name: 任务名称
+- trigger_type: cron
+- trigger_config: 0 9 * * *
+- instruction: |
+    具体的任务指令...
+- status: active</code></pre>
+
+<h3>旧格式（向后兼容）</h3>
+<p>系统同时支持旧格式，可在同一个 custom.md 中共存：</p>
+<pre><code>## Triggers
+### TRG-001
+- intent: 触发意图
+- type: cron
+- cron: 0 9 * * *
+- status: active
+
+## Execution Details
+### EXEC-001
+- intent: 执行意图
+- prompt: |
+    附加执行指令...</code></pre>
+
+<h3>数据目录结构</h3>
+<pre><code>~/.claude/skills/
+  news-monitor/
+    SKILL.md                              # Skill 定义（Claude Code 读取此文件）
+  skill-manager/
+    news-monitor/
+      custom.md                           # 自定义配置（任务、触发器、工具）
+      summary.md                          # LLM 自动生成的摘要
+      history.json                        # 执行历史 + 编辑日志
+      .skill-hash                         # SKILL.md 的 SHA-256 哈希（变更检测）</code></pre>
+<p class="note"><code>skill-manager/</code> 子目录确保数据文件不干扰 Claude Code 对 SKILL.md 的读取。</p>
+
+<h2 id="api">API 参考</h2>
+
+<h3>Skill 操作</h3>
+<table>
+  <tr><th>方法</th><th>路径</th><th>说明</th></tr>
+  <tr><td>GET</td><td><code>/api/skills</code></td><td>列出所有 Skill 名称</td></tr>
+  <tr><td>GET</td><td><code>/api/skills/[name]</code></td><td>获取 Skill 完整详情</td></tr>
+  <tr><td>PUT</td><td><code>/api/skills/[name]</code></td><td>更新 Skill（添加/更新任务、摘要）</td></tr>
+  <tr><td>DELETE</td><td><code>/api/skills/[name]</code></td><td>删除任务或触发器</td></tr>
+</table>
+
+<h3>执行</h3>
+<table>
+  <tr><th>方法</th><th>路径</th><th>说明</th></tr>
+  <tr><td>POST</td><td><code>/api/execute/[name]?trigger=manual&task_id=TASK-001</code></td><td>执行指定任务</td></tr>
+  <tr><td>POST</td><td><code>/api/execute/[name]?trigger=manual</code></td><td>执行整个 Skill</td></tr>
+  <tr><td>POST</td><td><code>/api/hooks/[hookId]</code></td><td>Webhook 触发</td></tr>
+</table>
+
+<h3>其他</h3>
+<table>
+  <tr><th>方法</th><th>路径</th><th>说明</th></tr>
+  <tr><td>GET</td><td><code>/api/settings</code></td><td>获取配置（API Key 脱敏）</td></tr>
+  <tr><td>PUT</td><td><code>/api/settings</code></td><td>更新配置</td></tr>
+  <tr><td>GET</td><td><code>/api/summary</code></td><td>批量同步所有 Skill 摘要</td></tr>
+  <tr><td>POST</td><td><code>/api/summary</code></td><td>生成单个 Skill 摘要</td></tr>
+  <tr><td>POST</td><td><code>/api/interpret</code></td><td>自然语言解析为任务配置</td></tr>
+  <tr><td>POST</td><td><code>/api/cron</code></td><td>管理 Crontab（register/remove/list）</td></tr>
+</table>
+
+<h2 id="architecture">技术架构</h2>
+
+<ul>
+  <li><span class="tag tag-blue">前端</span> Next.js App Router + React + Tailwind CSS</li>
+  <li><span class="tag tag-green">执行引擎</span> @mariozechner/pi-coding-agent（多轮 Agent Loop + Tool Calling）</li>
+  <li><span class="tag tag-orange">MCP</span> @modelcontextprotocol/sdk（通用 MCP 客户端）</li>
+  <li><span class="tag tag-purple">调度</span> 系统 crontab（标记注释管理）</li>
+</ul>
+
+<h3>执行流程</h3>
+<pre><code>用户/定时器/Webhook → API Route (/api/execute/[name])
+  → 读取 Skill 配置 (custom.md)
+  → 解析工具声明 (## Tools) → resolveTools() → ToolDefinition[]
+  → assemblePrompt() 组装完整 Prompt
+  → pi-coding-agent Agent Loop
+      → LLM 决策 → 调用工具 → 获取结果 → 继续推理（多轮自动）
+  → 记录执行日志 (history.json)
+  → Lobster 通知（如已启用）
+  → 检查 Chain 触发 → 递归执行下一个 Skill
+  → 返回结果 + 过程数据 (process steps, reasoning turns)</code></pre>
+
+<h3>执行引擎细节</h3>
+<table>
+  <tr><th>参数</th><th>值</th></tr>
+  <tr><td>Provider 类型</td><td><code>openai-completions</code>（OpenAI 兼容 API）</td></tr>
+  <tr><td>上下文窗口</td><td>128K tokens</td></tr>
+  <tr><td>最大输出</td><td>4096 tokens</td></tr>
+  <tr><td>Token 估算</td><td>基于字符数（<code>ceil(text.length / 4)</code>）</td></tr>
+  <tr><td>系统提示词</td><td>只输出最终结果，不包含推理过程</td></tr>
+</table>
+
+<p style="margin-top: 40px; color: #555; font-size: 0.85em; text-align: center;">
+  Skill Manager v1.0 — 2026-04-14
+</p>
+
+</div>
+</body>
+</html>

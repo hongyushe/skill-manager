@@ -7,7 +7,12 @@ interface Settings {
   api_key: string;
   model: string;
   skills_dir: string;
+  zai_api_key: string;
+  lobster_enabled: boolean;
+  lobster_path: string;
+  lobster_pipeline: string;
   _has_key?: boolean;
+  _has_zai_key?: boolean;
 }
 
 export default function SettingsForm() {
@@ -16,6 +21,10 @@ export default function SettingsForm() {
     api_key: "",
     model: "",
     skills_dir: "",
+    zai_api_key: "",
+    lobster_enabled: false,
+    lobster_path: "lobster",
+    lobster_pipeline: "",
   });
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -98,6 +107,79 @@ export default function SettingsForm() {
             className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="/Users/you/.claude/skills"
           />
+        </div>
+      </div>
+
+      <h2 className="text-lg font-semibold text-gray-900 mt-8 mb-4">Z.AI Web Search</h2>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Z.AI API Key
+          </label>
+          <input
+            type="password"
+            value={settings.zai_api_key}
+            onChange={(e) =>
+              setSettings({ ...settings, zai_api_key: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder={settings._has_zai_key ? "Saved (hidden)" : "zai-..."}
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Used for web search via Z.AI MCP. Get your key from{" "}
+            <a href="https://z.ai" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+              z.ai
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <h2 className="text-lg font-semibold text-gray-900 mt-8 mb-4">Lobster CLI Integration</h2>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="lobster_enabled"
+            checked={settings.lobster_enabled}
+            onChange={(e) =>
+              setSettings({ ...settings, lobster_enabled: e.target.checked })
+            }
+            className="h-4 w-4 text-blue-600 rounded border-gray-300"
+          />
+          <label htmlFor="lobster_enabled" className="text-sm font-medium text-gray-700">
+            Enable Lobster CLI notifications
+          </label>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Lobster CLI Path
+          </label>
+          <input
+            type="text"
+            value={settings.lobster_path}
+            onChange={(e) =>
+              setSettings({ ...settings, lobster_path: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="lobster"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Default Pipeline
+          </label>
+          <input
+            type="text"
+            value={settings.lobster_pipeline}
+            onChange={(e) =>
+              setSettings({ ...settings, lobster_pipeline: e.target.value })
+            }
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="exec echo '{{result}}'"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Pipeline template. Use {"{{result}}"} as placeholder for execution output.
+          </p>
         </div>
         <button
           onClick={handleSave}
